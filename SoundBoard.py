@@ -4,11 +4,11 @@ import sys, os
 
 from gi.repository import Gtk
 
-import modSoundBoardXML
+import modSoundboardInterface
 
 class wndMain:
 
-    soundBoardXML = None
+    SoundboardInterface = None
 
     def __init__(self):
         # Render the main window
@@ -22,9 +22,16 @@ class wndMain:
         # Fill the soundboards dropdpown and bind events
         dropdown = self.glade.get_object("cmbSoundboard")
 
-        self.soundBoardXML = modSoundBoardXML.SoundboardXML()
-        self.soundBoardXML.fill(dropdown)
-        self.soundBoardXML.bindFillEvents(dropdown)
+        self.soundBoardInterface = modSoundboardInterface.SoundboardInterface()
+        self.soundBoardInterface.fillDropdown(dropdown)
+        self.soundBoardInterface.bindDropdownEvents(dropdown)
+
+        # Render the soundboard buttons
+        primaryContainer = self.glade.get_object("frmPrimary")
+        secondaryContainer = self.glade.get_object("frmSecondary")
+
+        self.soundBoardInterface.renderButtons(primaryContainer, 'CTRL');
+        self.soundBoardInterface.renderButtons(secondaryContainer, 'ALT');
 
 if __name__ == '__main__':
     wndMain()
