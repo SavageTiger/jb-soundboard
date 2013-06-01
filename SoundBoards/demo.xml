@@ -1,0 +1,9 @@
+<root>
+    <primary>
+        <button id="0">
+            <binding>/home/savagetiger/Music/a.mp3</binding>
+        </button>
+    </primary>
+    <secondary>
+    </secondary>
+</root>
