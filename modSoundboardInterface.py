@@ -1,9 +1,11 @@
 
+import modSoundboardXML
 from gi.repository import Gtk
 import glob
 
 class SoundboardInterface:
 
+    buttonGrids = []
     xml = {}
 
     def fillDropdown(self, dropdown):
@@ -24,7 +26,19 @@ class SoundboardInterface:
         dropdown.connect("changed", self.initBoard)
 
     def initBoard(self, dropdown):
-        print self.xml[dropdown.get_active_text()]
+        offset = 0
+
+        xmlProperties = modSoundboardXML.SoundboardXML(
+            self.xml[dropdown.get_active_text()]
+        )
+
+        for buttonGrid in self.buttonGrids:
+            for button in buttonGrid:
+                offset = offset + 1
+
+                button.set_sensitive(xmlProperties.isBound(offset))
+
+
 
     def renderButtons(self, container, hotkey):
         offset = 0
@@ -32,10 +46,10 @@ class SoundboardInterface:
         grid = Gtk.Grid()
         grid.set_row_spacing(5)
         grid.set_column_spacing(5)
-
+        grid.show()
 
         container.add(grid)
-        grid.show()
+        self.buttonGrids.append(grid)
 
         for r in range(0, 5):
             for c in range(0, 2):
@@ -45,6 +59,7 @@ class SoundboardInterface:
                     label = 'Clip ' + str(offset) + '\r\n' +
                     hotkey + ' + '  + str(offset)
                 )
+                button.set_sensitive(False)
                 button.set_size_request(80, 80)
                 button.show()
 
