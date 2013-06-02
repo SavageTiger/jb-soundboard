@@ -14,6 +14,7 @@ class SoundboardInterface:
 
     buttonGrids = []
     buttonHoyKeys = {}
+    activeHotKey = ''
 
     xml = {}
     xmlProperties = None
@@ -64,7 +65,15 @@ class SoundboardInterface:
         thr.start()
 
     def keyCapture(self, event):
-        print event
+        if event.MessageName == 'key up' and event.Key == self.activeHotKey:
+            self.activeHotKey = ''
+        elif event.MessageName == 'key down' and self.activeHotKey == '':
+            self.activeHotKey = event.Key
+        elif event.MessageName == 'key down' and self.activeHotKey != '':
+            if str(self.activeHotKey + ' + ' + event.Key) in self.buttonHoyKeys:
+                button = self.buttonHoyKeys[self.activeHotKey + ' + ' + event.Key]
+
+                self.buttonClicked(button)
 
     def bindHookManager(self):
         hm = pyxhook.HookManager()
@@ -74,6 +83,9 @@ class SoundboardInterface:
         hm.run()
 
     def buttonClicked(self, sender):
+        if sender.get_sensitive() == False:
+            return
+
         offset = int(
             sender.get_name()
             .replace('primary_button_', '')
@@ -119,6 +131,6 @@ class SoundboardInterface:
                 button.connect('pressed', self.buttonClicked)
 
 
-                self.buttonHoyKeys[hotkey + ' ' + str(offset)] = button
+                self.buttonHoyKeys[hotkey + ' + ' + str(offset)] = button
 
                 grid.attach(button, c, r, 1, 1)
