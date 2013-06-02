@@ -2,15 +2,19 @@
 import modSoundboardXML
 import pyxhook
 
-from gi.repository import Gtk
+from gi.repository import Gtk, GObject
 import os
 import glob
 import gst
+import threading
 
 class SoundboardInterface:
 
     player = None
+
     buttonGrids = []
+    buttonHoyKeys = {}
+
     xml = {}
     xmlProperties = None
 
@@ -53,10 +57,20 @@ class SoundboardInterface:
 		fakesink = gst.element_factory_make("fakesink", "fakesink")
 		self.player.set_property("video-sink", fakesink)
 
+    def startHookManagerThread(self):
+        GObject.threads_init()
+        thr = threading.Thread(target=self.bindHookManager)
+        thr.daemon = True
+        thr.start()
+
+    def keyCapture(self, event):
+        print event
+
     def bindHookManager(self):
         hm = pyxhook.HookManager()
         hm.HookKeyboard()
-        hm.KeyDown = hm.printevent
+        hm.KeyDown = self.keyCapture
+        hm.KeyUp = self.keyCapture
         hm.run()
 
     def buttonClicked(self, sender):
@@ -103,5 +117,8 @@ class SoundboardInterface:
                 button.set_size_request(80, 80)
                 button.show()
                 button.connect('pressed', self.buttonClicked)
+
+
+                self.buttonHoyKeys[hotkey + ' ' + str(offset)] = button
 
                 grid.attach(button, c, r, 1, 1)

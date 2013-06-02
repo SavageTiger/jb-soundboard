@@ -28,15 +28,15 @@ class wndMain:
         primaryContainer = self.glade.get_object("frmPrimary")
         secondaryContainer = self.glade.get_object("frmSecondary")
 
-        self.soundBoardInterface.renderButtons(primaryContainer, 'CTRL', True);
-        self.soundBoardInterface.renderButtons(secondaryContainer, 'ALT', False);
+        self.soundBoardInterface.renderButtons(primaryContainer, 'Control_L', True);
+        self.soundBoardInterface.renderButtons(secondaryContainer, 'Alt_L', False);
 
         # Initialize the gstreamer player
         self.soundBoardInterface.initPlayer()
 
         # Yeah...there is a keylogger in this software package
         # They can actually be usefull you know
-        self.soundBoardInterface.bindHookManager();
+        self.soundBoardInterface.startHookManagerThread();
 
 if __name__ == '__main__':
     wndMain()
