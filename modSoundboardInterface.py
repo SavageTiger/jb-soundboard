@@ -7,6 +7,7 @@ class SoundboardInterface:
 
     buttonGrids = []
     xml = {}
+    xmlProperties = None
 
     def fillDropdown(self, dropdown):
         xmlFiles = glob.glob('./SoundBoards/*.xml')
@@ -26,21 +27,37 @@ class SoundboardInterface:
         dropdown.connect("changed", self.initBoard)
 
     def initBoard(self, dropdown):
-        offset = 0
-
-        xmlProperties = modSoundboardXML.SoundboardXML(
+        self.xmlProperties = modSoundboardXML.SoundboardXML(
             self.xml[dropdown.get_active_text()]
         )
 
         for buttonGrid in self.buttonGrids:
             for button in buttonGrid:
-                offset = offset + 1
+                primaryGrid = (button.get_name().find('primary') != -1)
 
-                button.set_sensitive(xmlProperties.isBound(offset))
+                offset = int(
+                    button.get_name()
+                    .replace('primary_button_', '')
+                    .replace('secondary_button_', '')
+                )
 
+                button.set_sensitive(self.xmlProperties.isBound(offset, primaryGrid))
 
+    def buttonClicked(self, sender):
+        offset = int(
+            sender.get_name()
+            .replace('primary_button_', '')
+            .replace('secondary_button_', '')
+        )
 
-    def renderButtons(self, container, hotkey):
+        filePath = self.xmlProperties.getFilePath(
+            offset,
+            (sender.get_name().find('primary') != -1)
+        )
+
+        print filePath
+
+    def renderButtons(self, container, hotkey, primary):
         offset = 0
 
         grid = Gtk.Grid()
@@ -59,8 +76,14 @@ class SoundboardInterface:
                     label = 'Clip ' + str(offset) + '\r\n' +
                     hotkey + ' + '  + str(offset)
                 )
+                if primary:
+                    button.set_name('primary_button_' + str(offset))
+                else:
+                    button.set_name('secondary_button_' + str(offset))
+
                 button.set_sensitive(False)
                 button.set_size_request(80, 80)
                 button.show()
+                button.connect('pressed', self.buttonClicked)
 
                 grid.attach(button, c, r, 1, 1)

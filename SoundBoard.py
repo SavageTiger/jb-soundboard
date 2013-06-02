@@ -12,12 +12,10 @@ class wndMain:
 
     def __init__(self):
         # Render the main window
-
         self.glade = Gtk.Builder()
         self.glade.add_from_file("GUI.glade")
         self.glade.get_object("wndMain").show_all()
         self.glade.get_object("wndMain").connect("delete-event", Gtk.main_quit)
-
 
         # Fill the soundboards dropdpown and bind events
         dropdown = self.glade.get_object("cmbSoundboard")
@@ -30,8 +28,8 @@ class wndMain:
         primaryContainer = self.glade.get_object("frmPrimary")
         secondaryContainer = self.glade.get_object("frmSecondary")
 
-        self.soundBoardInterface.renderButtons(primaryContainer, 'CTRL');
-        self.soundBoardInterface.renderButtons(secondaryContainer, 'ALT');
+        self.soundBoardInterface.renderButtons(primaryContainer, 'CTRL', True);
+        self.soundBoardInterface.renderButtons(secondaryContainer, 'ALT', False);
 
 if __name__ == '__main__':
     wndMain()
