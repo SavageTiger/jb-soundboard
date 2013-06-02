@@ -52,6 +52,7 @@ class SoundboardInterface:
                     button.get_name()
                     .replace('primary_button_', '')
                     .replace('secondary_button_', '')
+                    .replace('_playing', '')
                 )
 
                 button.set_sensitive(self.xmlProperties.isBound(offset, primaryGrid))
