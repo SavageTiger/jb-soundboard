@@ -1,0 +1,18 @@
+* {
+    padding: 10px;
+}
+
+#wndMain {
+    background-color: #EFEFEF;
+}
+
+GtkButton {
+    background: white;
+    border: 1px solid lightgray;
+    border-radius: 0;
+
+    box-shadow: none;
+
+    margin: 0 0 15px;
+    padding: 4px;
+}

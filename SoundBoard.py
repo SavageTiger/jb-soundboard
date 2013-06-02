@@ -2,7 +2,7 @@
 
 import sys, os
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 import modSoundboardInterface
 
@@ -14,8 +14,22 @@ class wndMain:
         # Render the main window
         self.glade = Gtk.Builder()
         self.glade.add_from_file("GUI.glade")
-        self.glade.get_object("wndMain").show_all()
-        self.glade.get_object("wndMain").connect("delete-event", Gtk.main_quit)
+
+        window = self.glade.get_object("wndMain")
+        window.set_title('SoundBoard 1.0 [JB Edition]')
+        window.show_all()
+        window.connect("delete-event", Gtk.main_quit)
+        window.set_name('wndMain')
+
+        # Add a awesome gtk3 style-provider
+        styleProvider = Gtk.CssProvider()
+        styleProvider.load_from_data(open('./Skin/skin.css').read())
+
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            styleProvider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
         # Fill the soundboards dropdpown and bind events
         dropdown = self.glade.get_object("cmbSoundboard")

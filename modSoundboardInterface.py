@@ -126,10 +126,9 @@ class SoundboardInterface:
                     button.set_name('secondary_button_' + str(offset))
 
                 button.set_sensitive(False)
-                button.set_size_request(80, 80)
+                button.set_size_request(120, 80)
                 button.show()
                 button.connect('pressed', self.buttonClicked)
-
 
                 self.buttonHoyKeys[hotkey + ' + ' + str(offset)] = button
 
