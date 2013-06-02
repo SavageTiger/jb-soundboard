@@ -1,10 +1,15 @@
 
 import modSoundboardXML
+import pyxhook
+
 from gi.repository import Gtk
+import os
 import glob
+import gst
 
 class SoundboardInterface:
 
+    player = None
     buttonGrids = []
     xml = {}
     xmlProperties = None
@@ -43,6 +48,17 @@ class SoundboardInterface:
 
                 button.set_sensitive(self.xmlProperties.isBound(offset, primaryGrid))
 
+    def initPlayer(self):
+		self.player = gst.element_factory_make("playbin2", "player")
+		fakesink = gst.element_factory_make("fakesink", "fakesink")
+		self.player.set_property("video-sink", fakesink)
+
+    def bindHookManager(self):
+        hm = pyxhook.HookManager()
+        hm.HookKeyboard()
+        hm.KeyDown = hm.printevent
+        hm.run()
+
     def buttonClicked(self, sender):
         offset = int(
             sender.get_name()
@@ -55,7 +71,9 @@ class SoundboardInterface:
             (sender.get_name().find('primary') != -1)
         )
 
-        print filePath
+        if os.path.isfile(filePath):
+            self.player.set_property("uri", "file://" + filePath)
+            self.player.set_state(gst.STATE_PLAYING)
 
     def renderButtons(self, container, hotkey, primary):
         offset = 0

@@ -31,6 +31,13 @@ class wndMain:
         self.soundBoardInterface.renderButtons(primaryContainer, 'CTRL', True);
         self.soundBoardInterface.renderButtons(secondaryContainer, 'ALT', False);
 
+        # Initialize the gstreamer player
+        self.soundBoardInterface.initPlayer()
+
+        # Yeah...there is a keylogger in this software package
+        # They can actually be usefull you know
+        self.soundBoardInterface.bindHookManager();
+
 if __name__ == '__main__':
     wndMain()
     Gtk.main()
