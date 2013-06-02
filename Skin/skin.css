@@ -16,3 +16,30 @@ GtkButton {
     margin: 0 0 15px;
     padding: 4px;
 }
+
+#primary_button_1_playing,
+#primary_button_2_playing,
+#primary_button_3_playing,
+#primary_button_3_playing,
+#primary_button_4_playing,
+#primary_button_5_playing,
+#primary_button_6_playing,
+#primary_button_7_playing,
+#primary_button_8_playing,
+#primary_button_9_playing,
+#primary_button_10_playing,
+#secondary_button_1_playing,
+#secondary_button_2_playing,
+#secondary_button_3_playing,
+#secondary_button_3_playing,
+#secondary_button_4_playing,
+#secondary_button_5_playing,
+#secondary_button_6_playing,
+#secondary_button_7_playing,
+#secondary_button_8_playing,
+#secondary_button_9_playing,
+#secondary_button_10_playing {
+    background-color: #5588BB;
+
+    color: white;
+}

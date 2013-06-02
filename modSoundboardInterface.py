@@ -2,7 +2,9 @@
 import modSoundboardXML
 import pyxhook
 
+import gobject # Without the legacy gobject gstreamer will segfault
 from gi.repository import Gtk, GObject
+
 import os
 import glob
 import gst
@@ -14,6 +16,7 @@ class SoundboardInterface:
 
     buttonGrids = []
     buttonHoyKeys = {}
+    buttonActive = None
     activeHotKey = ''
 
     xml = {}
@@ -54,17 +57,30 @@ class SoundboardInterface:
                 button.set_sensitive(self.xmlProperties.isBound(offset, primaryGrid))
 
     def initPlayer(self):
-		self.player = gst.element_factory_make("playbin2", "player")
-		fakesink = gst.element_factory_make("fakesink", "fakesink")
-		self.player.set_property("video-sink", fakesink)
+        self.player = gst.element_factory_make("playbin2", "player")
+        fakesink = gst.element_factory_make("fakesink", "fakesink")
+        self.player.set_property("video-sink", fakesink)
+
+        bus = self.player.get_bus()
+        bus.add_signal_watch()
+        bus.connect("message", self.__playerMessage)
+
+    def __playerMessage(self, bus, msg):
+        t = msg.type
+
+        if t == gst.MESSAGE_EOS: # EOS = End of song
+            self.player.set_state(gst.STATE_NULL)
+            self.buttonClicked(self.buttonActive)
+            self.buttonActive = None
 
     def startHookManagerThread(self):
         GObject.threads_init()
+        gobject.threads_init()
         thr = threading.Thread(target=self.bindHookManager)
         thr.daemon = True
         thr.start()
 
-    def keyCapture(self, event):
+    def __keyCapture(self, event):
         if event.MessageName == 'key up' and event.Key == self.activeHotKey:
             self.activeHotKey = ''
         elif event.MessageName == 'key down' and self.activeHotKey == '':
@@ -78,18 +94,22 @@ class SoundboardInterface:
     def bindHookManager(self):
         hm = pyxhook.HookManager()
         hm.HookKeyboard()
-        hm.KeyDown = self.keyCapture
-        hm.KeyUp = self.keyCapture
+        hm.KeyDown = self.__keyCapture
+        hm.KeyUp = self.__keyCapture
         hm.run()
 
     def buttonClicked(self, sender):
         if sender.get_sensitive() == False:
             return
 
+        if self.buttonActive != None and self.buttonActive != sender:
+            self.buttonClicked(self.buttonActive)
+
         offset = int(
             sender.get_name()
             .replace('primary_button_', '')
             .replace('secondary_button_', '')
+            .replace('_playing', '')
         )
 
         filePath = self.xmlProperties.getFilePath(
@@ -98,8 +118,17 @@ class SoundboardInterface:
         )
 
         if os.path.isfile(filePath):
-            self.player.set_property("uri", "file://" + filePath)
-            self.player.set_state(gst.STATE_PLAYING)
+            if sender.get_name().find('_playing') > 0:
+                self.player.set_state(gst.STATE_NULL)
+
+                self.buttonActive = None
+                sender.set_name(sender.get_name().replace('_playing', ''))
+            else:
+                self.player.set_property("uri", "file://" + filePath)
+                self.player.set_state(gst.STATE_PLAYING)
+
+                self.buttonActive = sender
+                sender.set_name(sender.get_name() + '_playing')
 
     def renderButtons(self, container, hotkey, primary):
         offset = 0
