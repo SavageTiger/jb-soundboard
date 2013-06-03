@@ -67,7 +67,21 @@ class SoundboardInterface:
                     .replace('_playing', '')
                 )
 
-                button.set_sensitive(self.ioProperties.isBound(offset, primaryGrid))
+                if self.ioProperties.isBound(offset, primaryGrid):
+                    filePath = self.ioProperties.getFilePath(offset, primaryGrid)
+                    filePath = os.path.basename(filePath)
+
+                    buttonCaption = button.get_label().split('\r\n')
+                    buttonCaption = filePath + '\r\n' + buttonCaption[1]
+
+                    button.set_sensitive(True)
+                else:
+                    buttonCaption = button.get_label().split('\r\n')
+                    buttonCaption = 'Clip ' + str(offset) + '\r\n' + buttonCaption[1]
+
+                    button.set_sensitive(False)
+
+                button.set_label(buttonCaption)
 
     def initPlayer(self):
         self.player = gst.element_factory_make("playbin2", "player")
@@ -162,7 +176,7 @@ class SoundboardInterface:
 
                 button = Gtk.Button(
                     label = 'Clip ' + str(offset) + '\r\n' +
-                    hotkey + ' + '  + str(offset)
+                    hotkey + ' + '  + str(offset).replace('10', '0')
                 )
                 if primary:
                     button.set_name('primary_button_' + str(offset))
@@ -174,6 +188,6 @@ class SoundboardInterface:
                 button.show()
                 button.connect('pressed', self.buttonClicked)
 
-                self.buttonHoyKeys[hotkey + ' + ' + str(offset)] = button
+                self.buttonHoyKeys[hotkey + ' + ' + str(offset).replace('10', '0')] = button
 
                 grid.attach(button, c, r, 1, 1)
