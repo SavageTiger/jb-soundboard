@@ -1,5 +1,6 @@
 
 import modSoundboardXML
+import modSoundboardJSON
 import pyxhook
 
 import gobject # Without the legacy gobject gstreamer will segfault
@@ -20,29 +21,40 @@ class SoundboardInterface:
     activeHotKey = ''
 
     xml = {}
-    xmlProperties = None
+    json = {}
+    ioProperties = None
 
     def fillDropdown(self, dropdown):
-        xmlFiles = glob.glob('./SoundBoards/*.xml')
+        configFiles = glob.glob('./SoundBoards/*.xml')
+        configFiles = configFiles + glob.glob('./SoundBoards/*.json')
 
-        for xmlFile in xmlFiles:
-            xmlFileContent = open(xmlFile).read()
+        for configFile in configFiles:
+            isXml = (configFile.find('.xml') > 0)
+            fileContent = open(configFile).read()
 
-            xmlFile = xmlFile.replace('./SoundBoards/', '');
-            xmlFile = xmlFile.replace('.xml', '');
-            xmlFile = xmlFile.capitalize()
+            configFile = configFile.replace('./SoundBoards/', '');
+            configFile = configFile.replace('.xml', '').replace('.json', '');
+            configFile = configFile.capitalize()
 
-            self.xml[xmlFile] = xmlFileContent
+            if isXml:
+                self.xml[configFile] = fileContent
+            else:
+                self.json[configFile] = fileContent
 
-            dropdown.append_text(xmlFile)
+            dropdown.append_text(configFile)
 
     def bindDropdownEvents(self, dropdown):
         dropdown.connect("changed", self.initBoard)
 
     def initBoard(self, dropdown):
-        self.xmlProperties = modSoundboardXML.SoundboardXML(
-            self.xml[dropdown.get_active_text()]
-        )
+        if dropdown.get_active_text() in self.xml:
+            self.ioProperties = modSoundboardXML.SoundboardXML(
+                self.xml[dropdown.get_active_text()]
+            )
+        elif dropdown.get_active_text() in self.json:
+            self.ioProperties = modSoundboardJSON.SoundboardJSON(
+                self.json[dropdown.get_active_text()]
+            )
 
         for buttonGrid in self.buttonGrids:
             for button in buttonGrid:
@@ -55,7 +67,7 @@ class SoundboardInterface:
                     .replace('_playing', '')
                 )
 
-                button.set_sensitive(self.xmlProperties.isBound(offset, primaryGrid))
+                button.set_sensitive(self.ioProperties.isBound(offset, primaryGrid))
 
     def initPlayer(self):
         self.player = gst.element_factory_make("playbin2", "player")
@@ -113,7 +125,7 @@ class SoundboardInterface:
             .replace('_playing', '')
         )
 
-        filePath = self.xmlProperties.getFilePath(
+        filePath = self.ioProperties.getFilePath(
             offset,
             (sender.get_name().find('primary') != -1)
         )

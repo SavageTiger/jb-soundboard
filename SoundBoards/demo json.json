@@ -1,0 +1,13 @@
+{
+    "primary": {
+        "button_1": {
+            "binding": "/home/savagetiger/Music/a.mp3"
+        }
+    },
+
+    "secondary": {
+        "button_1": {
+            "binding": "/home/savagetiger/Music/b.mp3"
+        }
+    }
+}
