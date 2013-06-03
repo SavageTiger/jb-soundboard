@@ -17,7 +17,7 @@ Features
 Requirements
 ============
 - Gtk3
-- Pyhon (obviously)
+- Pyhon version 2.x (not 3!), tested and developed on 2.7.4
 - python-gst0.10 (gstreamer bindings)
 - python-glade2 (gui)
 - python-xlib (hotkey capture)
