@@ -1,13 +1,13 @@
 {
     "primary": {
         "button_1": {
-            "binding": "/home/savagetiger/Music/a.mp3"
+            "binding": "./Sounds/spell4.mp3"
         }
     },
 
     "secondary": {
         "button_1": {
-            "binding": "/home/savagetiger/Music/b.mp3"
+            "binding": "./Sounds/spell2.mp3"
         }
     }
 }

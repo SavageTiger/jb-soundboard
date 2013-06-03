@@ -131,6 +131,8 @@ class SoundboardInterface:
         )
 
         if os.path.isfile(filePath):
+            filePath = os.path.abspath(filePath)
+
             if sender.get_name().find('_playing') > 0:
                 self.player.set_state(gst.STATE_NULL)
 

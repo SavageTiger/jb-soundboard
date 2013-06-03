@@ -2,13 +2,13 @@
 <root>
     <primary>
         <button id="1">
-            <binding>/home/savagetiger/Music/a.mp3</binding>
+            <binding>./Sounds/spell2.mp3</binding>
         </button>
     </primary>
 
     <secondary>
         <button id="1">
-            <binding>/home/savagetiger/Music/b.mp3</binding>
+            <binding>./Sounds/spell4.mp3</binding>
         </button>
     </secondary>
 </root>
