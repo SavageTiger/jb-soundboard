@@ -13,12 +13,12 @@ class wndMain:
     def __init__(self):
         # Render the main window
         self.glade = Gtk.Builder()
-        self.glade.add_from_file("GUI.glade")
+        self.glade.add_from_file('GUI.glade')
 
-        window = self.glade.get_object("wndMain")
+        window = self.glade.get_object('wndMain')
         window.set_title('SoundBoard 1.0 [JB Edition]')
         window.show_all()
-        window.connect("delete-event", Gtk.main_quit)
+        window.connect('delete-event', Gtk.main_quit)
         window.set_name('wndMain')
 
         # Add a awesome gtk3 style-provider
@@ -32,15 +32,18 @@ class wndMain:
         )
 
         # Fill the soundboards dropdpown and bind events
-        dropdown = self.glade.get_object("cmbSoundboard")
+        dropdown = self.glade.get_object('cmbSoundboard')
 
         self.soundBoardInterface = modSoundboardInterface.SoundboardInterface()
         self.soundBoardInterface.fillDropdown(dropdown)
         self.soundBoardInterface.bindDropdownEvents(dropdown)
 
+        # Set state to ready
+        self.soundBoardInterface.setState('Ready', self.glade.get_object('playState'))
+
         # Render the soundboard buttons
-        primaryContainer = self.glade.get_object("frmPrimary")
-        secondaryContainer = self.glade.get_object("frmSecondary")
+        primaryContainer = self.glade.get_object('frmPrimary')
+        secondaryContainer = self.glade.get_object('frmSecondary')
 
         self.soundBoardInterface.renderButtons(primaryContainer, 'Control_L', True);
         self.soundBoardInterface.renderButtons(secondaryContainer, 'Alt_L', False);

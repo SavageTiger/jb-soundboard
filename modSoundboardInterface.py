@@ -20,9 +20,19 @@ class SoundboardInterface:
     buttonActive = None
     activeHotKey = ''
 
+    stateObject = None
+    stateId = 0
+
     xml = {}
     json = {}
     ioProperties = None
+
+    def setState(self, msg, stateObject = None):
+        if stateObject != None:
+            self.stateId = stateObject.get_context_id('SB')
+            self.stateObject = stateObject
+
+        self.stateObject.push(self.stateId, msg)
 
     def fillDropdown(self, dropdown):
         configFiles = glob.glob('./SoundBoards/*.xml')
@@ -152,12 +162,16 @@ class SoundboardInterface:
 
                 self.buttonActive = None
                 sender.set_name(sender.get_name().replace('_playing', ''))
+
+                self.setState('Stopped')
             else:
                 self.player.set_property("uri", "file://" + filePath)
                 self.player.set_state(gst.STATE_PLAYING)
 
                 self.buttonActive = sender
                 sender.set_name(sender.get_name() + '_playing')
+
+                self.setState('Playing')
 
     def renderButtons(self, container, hotkey, primary):
         offset = 0
