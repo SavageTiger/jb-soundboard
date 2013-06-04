@@ -14,6 +14,7 @@ import threading
 class SoundboardInterface:
 
     player = None
+    playerDuration = 0
 
     buttonGrids = []
     buttonHoyKeys = {}
@@ -33,6 +34,16 @@ class SoundboardInterface:
             self.stateObject = stateObject
 
         self.stateObject.push(self.stateId, msg)
+
+    def startStateThread(self):
+        if self.playerDuration <= 0:
+            self.setState('Ready')
+        else:
+            self.setState('Playing [' + str(self.playerDuration) + 'ms]')
+
+            self.playerDuration = self.playerDuration - 100
+
+            threading.Timer(0.1, self.startStateThread).start()
 
     def fillDropdown(self, dropdown):
         configFiles = glob.glob('./SoundBoards/*.xml')
@@ -109,6 +120,15 @@ class SoundboardInterface:
             self.player.set_state(gst.STATE_NULL)
             self.buttonClicked(self.buttonActive)
             self.buttonActive = None
+        elif t == gst.MESSAGE_DURATION:
+            duration = msg.parse_duration()[1]
+            duration = duration / 1000000 # Convert to ms
+
+            if self.playerDuration <= 0:
+                self.playerDuration = duration
+                self.startStateThread()
+            else:
+                self.playerDuration = duration
 
     def startHookManagerThread(self):
         GObject.threads_init()
@@ -162,16 +182,12 @@ class SoundboardInterface:
 
                 self.buttonActive = None
                 sender.set_name(sender.get_name().replace('_playing', ''))
-
-                self.setState('Stopped')
             else:
                 self.player.set_property("uri", "file://" + filePath)
                 self.player.set_state(gst.STATE_PLAYING)
 
                 self.buttonActive = sender
                 sender.set_name(sender.get_name() + '_playing')
-
-                self.setState('Playing')
 
     def renderButtons(self, container, hotkey, primary):
         offset = 0
