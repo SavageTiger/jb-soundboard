@@ -38,6 +38,12 @@ class wndMain:
         self.soundBoardInterface.fillDropdown(dropdown)
         self.soundBoardInterface.bindDropdownEvents(dropdown)
 
+        # Bind volume events
+        self.soundBoardInterface.bindVolumeEvents(
+            self.glade.get_object('volumePrimary'),
+            self.glade.get_object('volumeSecondary')
+        )
+
         # Set state to ready
         self.soundBoardInterface.setState(
             0, 0,

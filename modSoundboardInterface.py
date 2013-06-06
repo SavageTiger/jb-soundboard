@@ -16,6 +16,9 @@ class SoundboardInterface:
     player = None
     playerDuration = 0
 
+    volumePrimary = None
+    volumeSecondary = None
+
     buttonGrids = []
     buttonHoyKeys = {}
     buttonActive = None
@@ -192,8 +195,42 @@ class SoundboardInterface:
                 self.player.set_property("uri", "file://" + filePath)
                 self.player.set_state(gst.STATE_PLAYING)
 
+                if sender.get_name().find('primary') == 0:
+                    self.player.set_property("volume", (self.volumePrimary.get_value() / 100))
+                else:
+                    self.player.set_property("volume", (self.volumeSecondary.get_value() / 100))
+
                 self.buttonActive = sender
                 sender.set_name(sender.get_name() + '_playing')
+
+    def bindVolumeEvents(self, volumePrimary, volumeSecondary):
+        self.volumePrimary = volumePrimary
+        self.volumeSecondary = volumeSecondary
+
+        volumePrimary.set_name('volumePrimary')
+        volumeSecondary.set_name('volumeSecondary')
+
+        adjumentPrimary = Gtk.Adjustment(100, 0, 100, 5, 10, 0)
+        adjumentSecondary = Gtk.Adjustment(100, 0, 100, 5, 10, 0)
+
+        volumePrimary.set_adjustment(adjumentPrimary)
+        volumeSecondary.set_adjustment(adjumentSecondary)
+
+        volumePrimary.set_size_request(0, 30)
+        volumeSecondary.set_size_request(0, 30)
+
+        volumePrimary.connect('value-changed', self.volumeChanged)
+        volumeSecondary.connect('value-changed', self.volumeChanged)
+
+    def volumeChanged(self, sender):
+        if self.buttonActive == None:
+            return
+        elif sender.get_name() == 'volumePrimary' and self.buttonActive.get_name().find('primary') == -1:
+            return
+        elif sender.get_name() == 'volumeSecondary' and self.buttonActive.get_name().find('secondary') == -1:
+            return
+
+        self.player.set_property("volume", (sender.get_value() / 100))
 
     def renderButtons(self, container, hotkey, primary):
         offset = 0

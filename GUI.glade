@@ -76,6 +76,18 @@
               </packing>
             </child>
             <child>
+              <object class="GtkSeparator" id="seperator">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+                <property name="width">1</property>
+                <property name="height">1</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkFrame" id="frmSecondary">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -95,18 +107,6 @@
               </object>
               <packing>
                 <property name="left_attach">2</property>
-                <property name="top_attach">0</property>
-                <property name="width">1</property>
-                <property name="height">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparator" id="seperator">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
                 <property name="top_attach">0</property>
                 <property name="width">1</property>
                 <property name="height">1</property>
@@ -154,6 +154,45 @@
             <property name="fill">True</property>
             <property name="pack_type">end</property>
             <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="volumegrid.attach_next_to(self.v_scale, self.h_scale, Gtk.PositionType.RIGHT, 1, 1)">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkScale" id="volumePrimary">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="round_digits">1</property>
+                <property name="value_pos">left</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScale" id="volumeSecondary">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="upper_stepper_sensitivity">on</property>
+                <property name="round_digits">1</property>
+                <property name="value_pos">right</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>
