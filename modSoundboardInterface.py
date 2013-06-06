@@ -21,29 +21,35 @@ class SoundboardInterface:
     buttonActive = None
     activeHotKey = ''
 
-    stateObject = None
+    stateObjects = None
     stateId = 0
 
     xml = {}
     json = {}
     ioProperties = None
 
-    def setState(self, msg, stateObject = None):
-        if stateObject != None:
-            self.stateId = stateObject.get_context_id('SB')
-            self.stateObject = stateObject
+    def setState(self, progress, total = 0, stateObjects = None):
+        if stateObjects != None:
+            self.stateId = stateObjects[0].get_context_id('SB')
+            self.stateObjects = stateObjects
 
-        self.stateObject.push(self.stateId, msg)
-
-    def startStateThread(self):
-        if self.playerDuration <= 0:
-            self.setState('Ready')
+        if progress <= 0:
+            self.stateObjects[0].push(self.stateId, 'Ready')
         else:
-            self.setState('Playing [' + str(self.playerDuration) + 'ms]')
+            fraction = (progress * 1e2 / total) / 100
+
+            self.stateObjects[0].push(self.stateId, 'Playing [' + str(progress) + 'ms]')
+            self.stateObjects[1].set_fraction(fraction)
+
+    def startStateThread(self, totalDuration = 0):
+        if self.playerDuration <= 0:
+            self.setState(0)
+        else:
+            self.setState(self.playerDuration, totalDuration)
 
             self.playerDuration = self.playerDuration - 100
 
-            threading.Timer(0.1, self.startStateThread).start()
+            threading.Timer(0.1, self.startStateThread, (totalDuration, )).start()
 
     def fillDropdown(self, dropdown):
         configFiles = glob.glob('./SoundBoards/*.xml')
@@ -126,7 +132,7 @@ class SoundboardInterface:
 
             if self.playerDuration <= 0:
                 self.playerDuration = duration
-                self.startStateThread()
+                self.startStateThread(self.playerDuration)
             else:
                 self.playerDuration = duration
 

@@ -39,7 +39,10 @@ class wndMain:
         self.soundBoardInterface.bindDropdownEvents(dropdown)
 
         # Set state to ready
-        self.soundBoardInterface.setState('Ready', self.glade.get_object('playState'))
+        self.soundBoardInterface.setState(
+            0, 0,
+            [self.glade.get_object('playState'), self.glade.get_object('progressState')]
+        )
 
         # Render the soundboard buttons
         primaryContainer = self.glade.get_object('frmPrimary')
