@@ -7,15 +7,21 @@
       <object class="GtkBox" id="container">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">5</property>
+        <property name="margin_right">5</property>
+        <property name="margin_top">5</property>
+        <property name="margin_bottom">5</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkGrid" id="Top">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="column_homogeneous">True</property>
             <child>
               <object class="GtkComboBoxText" id="cmbSoundboard">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_right">10</property>
                 <property name="entry_text_column">0</property>
                 <property name="id_column">1</property>
               </object>
@@ -30,7 +36,10 @@
               <object class="GtkLabel" id="lblSoundboard">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Selected SoundBoard</property>
+                <property name="halign">end</property>
+                <property name="margin_right">10</property>
+                <property name="ypad">1</property>
+                <property name="label" translatable="yes">Available soundboards</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -50,6 +59,9 @@
           <object class="GtkGrid" id="Interface">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_left">5</property>
+            <property name="margin_right">5</property>
+            <property name="margin_top">10</property>
             <child>
               <object class="GtkFrame" id="frmPrimary">
                 <property name="visible">True</property>
@@ -63,6 +75,7 @@
                   <object class="GtkLabel" id="lblPrimary">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">&lt;b&gt;Primary bindings&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
@@ -79,6 +92,8 @@
               <object class="GtkSeparator" id="seperator">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -100,6 +115,7 @@
                   <object class="GtkLabel" id="lblSecondary">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">&lt;b&gt;Secondary bindings&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
@@ -128,6 +144,7 @@
               <object class="GtkStatusbar" id="playState">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">5</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">2</property>
               </object>
@@ -165,6 +182,8 @@
               <object class="GtkScale" id="volumePrimary">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
                 <property name="round_digits">1</property>
                 <property name="value_pos">left</property>
               </object>
@@ -178,6 +197,8 @@
               <object class="GtkScale" id="volumeSecondary">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
                 <property name="upper_stepper_sensitivity">on</property>
                 <property name="round_digits">1</property>
                 <property name="value_pos">right</property>
