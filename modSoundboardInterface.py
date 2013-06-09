@@ -147,6 +147,15 @@ class SoundboardInterface:
         thr.start()
 
     def __keyCapture(self, event):
+        numpadMap = {
+            'P_Insert': '0', 'P_End': '1', 'P_Down': '2', 'P_Next': '3',
+            'P_Left': '4', 'P_Begin': '5', 'P_Right': '6', 'P_Home': '7',
+            'P_Up': '8', 'P_Page_Up': '9'
+        }
+
+        if event.Key in numpadMap:
+            event.Key = numpadMap[event.Key]
+
         if event.MessageName == 'key up' and event.Key == self.activeHotKey:
             self.activeHotKey = ''
         elif event.MessageName == 'key down' and self.activeHotKey == '':
