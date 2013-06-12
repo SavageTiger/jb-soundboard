@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 #
 # pyxhook -- an extension to emulate some of the PyHook library on linux.
 #
