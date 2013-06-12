@@ -21,3 +21,4 @@ Requirements
 - python-gst0.10 (gstreamer bindings)
 - python-glade2 (gui)
 - python2-xlib (hotkey capture)
+- python2-imaging
